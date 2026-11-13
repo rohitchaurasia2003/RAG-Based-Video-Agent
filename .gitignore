@@ -5,3 +5,4 @@ _DS_Store
 __pycache__
 vector_db
 tests
+.DS_Store
