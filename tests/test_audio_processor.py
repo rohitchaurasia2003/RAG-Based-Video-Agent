@@ -52,7 +52,7 @@ class AudioProcessorTests(unittest.TestCase):
             audio_processor.yt_dlp.utils.DownloadError("HTTP Error 403: Forbidden")
         )
 
-        with self.assertRaisesRegex(RuntimeError, "YOUTUBE_COOKIES_FROM_BROWSER"):
+        with self.assertRaisesRegex(RuntimeError, "upload the media file"):
             audio_processor.download_youtube_audio("https://www.youtube.com/watch?v=example")
 
 

@@ -220,7 +220,8 @@ def download_youtube_audio(url: str) -> str:
                 "YouTube denied the download (HTTP 403). If you can view this video in your browser, "
                 "set YOUTUBE_COOKIES_FROM_BROWSER=chrome (or firefox, edge, or brave) in .env and "
                 "restart the app. Alternatively, set YOUTUBE_COOKIES_FILE to a Netscape-format "
-                "cookies file."
+                "cookies file. On hosted deployments, the browser profile on your computer is not "
+                "available to the app; upload the media file in the sidebar instead."
             ) from exc
         raise
 
