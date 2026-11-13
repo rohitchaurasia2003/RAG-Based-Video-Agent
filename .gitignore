@@ -3,3 +3,5 @@
 .vscode
 _DS_Store
 __pycache__
+vector_db
+tests
