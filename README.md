@@ -4,7 +4,7 @@ Turn a meeting recording or YouTube video into a transcript, concise summary, ac
 
 ## Features
 
-- Process a YouTube URL or a local audio/video file.
+- Process a YouTube URL, a local audio/video path, or an uploaded media file.
 - Transcribe English audio locally with OpenAI Whisper.
 - Transcribe Hinglish audio with Sarvam Speech-to-Text Translate, returning English text.
 - Generate a meeting title, summary, action items, key decisions, and open questions with Groq.
@@ -66,7 +66,7 @@ Start the Streamlit interface from the project directory:
 streamlit run app.py
 ```
 
-Open the local URL printed by Streamlit. In the sidebar, enter either a YouTube URL or a path to a local media file, select `english` or `hinglish`, and choose **Analyse**. The first Whisper run may download the selected model weights.
+Open the URL printed by Streamlit. In the sidebar, enter a YouTube URL or local media path, or upload a media file. Use only one input at a time, select `english` or `hinglish`, and choose **Analyse**. Uploading is useful when a remote host cannot download a video from YouTube. The first Whisper run may download the selected model weights.
 
 When analysis completes, the app displays the title, summary, full transcript, action items, key decisions, and open questions. Use the chat area to ask questions about the transcript.
 
@@ -88,7 +88,7 @@ YouTube may reject downloads with HTTP 403, even when `yt-dlp` is up to date. If
 YOUTUBE_COOKIES_FROM_BROWSER=chrome
 ```
 
-Supported browser names include `chrome`, `firefox`, `edge`, and `brave`. Alternatively, set `YOUTUBE_COOKIES_FILE` to the path of a Netscape-format cookies file:
+Supported browser names include `chrome`, `firefox`, `edge`, and `brave`. The browser profile must be available on the machine running Streamlit; a hosted deployment cannot access browser cookies from your computer. When running remotely, upload the media file instead, or set `YOUTUBE_COOKIES_FILE` to the path of a Netscape-format cookies file available to the server:
 
 ```env
 YOUTUBE_COOKIES_FILE=/absolute/path/to/cookies.txt

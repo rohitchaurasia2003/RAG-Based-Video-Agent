@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+import tempfile
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -42,6 +43,19 @@ def _resolve_downloaded_media_path(directory: str) -> str:
 
     newest = max(candidates, key=lambda path: path.stat().st_mtime)
     return str(newest)
+
+
+def save_uploaded_media(uploaded_file) -> str:
+    suffix = Path(uploaded_file.name).suffix.lower()
+    with tempfile.NamedTemporaryFile(
+        mode="wb",
+        prefix="upload_",
+        suffix=suffix,
+        dir=DOWNLOAD_DIR,
+        delete=False,
+    ) as media_file:
+        media_file.write(uploaded_file.getbuffer())
+    return media_file.name
 
 
 def ensure_ffmpeg() -> str:

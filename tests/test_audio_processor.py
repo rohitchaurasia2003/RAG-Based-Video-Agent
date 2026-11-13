@@ -1,7 +1,7 @@
 import os
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from utils import audio_processor
 
@@ -19,6 +19,20 @@ class AudioProcessorTests(unittest.TestCase):
 
             resolved = audio_processor._resolve_downloaded_media_path(tmpdir)
             self.assertEqual(resolved, final)
+
+    def test_save_uploaded_media_writes_to_download_directory(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            uploaded_file = Mock()
+            uploaded_file.name = "meeting.mp4"
+            uploaded_file.getbuffer.return_value = b"media bytes"
+
+            with patch.object(audio_processor, "DOWNLOAD_DIR", tmpdir):
+                saved_path = audio_processor.save_uploaded_media(uploaded_file)
+
+            self.assertEqual(os.path.dirname(saved_path), tmpdir)
+            self.assertTrue(saved_path.endswith(".mp4"))
+            with open(saved_path, "rb") as media_file:
+                self.assertEqual(media_file.read(), b"media bytes")
 
     @patch.dict(os.environ, {"YOUTUBE_COOKIES_FROM_BROWSER": "chrome", "YOUTUBE_COOKIES_FILE": ""})
     @patch.object(audio_processor, "_resolve_downloaded_media_path", return_value="downloads/video.wav")

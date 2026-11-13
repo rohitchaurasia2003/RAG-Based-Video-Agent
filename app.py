@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env", override=True)
 
 import streamlit as st
-from utils.audio_processor import process_input
+from utils.audio_processor import process_input, save_uploaded_media
 from core.transcriber import transcribe_all
 from core.summarizer import summarize, generate_title
 from core.extractor import extract_action_items, extract_key_decisions, extract_questions
@@ -340,6 +340,10 @@ with st.sidebar:
 
     st.markdown('<span class="badge badge-purple">Input</span>', unsafe_allow_html=True)
     source = st.text_input("YouTube URL or File Path", placeholder="https://youtube.com/watch?v=... or /path/to/file.mp4")
+    uploaded_file = st.file_uploader(
+        "Or upload a media file",
+        type=["mp4", "mov", "mkv", "webm", "mp3", "wav", "m4a", "aac", "flac", "ogg"],
+    )
 
     language = st.selectbox("Language", ["english", "hinglish"], index=0)
 
@@ -365,8 +369,10 @@ st.markdown("---")
 
 # ── Run Pipeline ────────────────────────────────────────────────────────────────
 if run_btn:
-    if not source.strip():
-        st.error("Please enter a YouTube URL or file path.")
+    if not source.strip() and uploaded_file is None:
+        st.error("Enter a YouTube URL or file path, or upload a media file.")
+    elif source.strip() and uploaded_file is not None:
+        st.error("Use either a URL/path or an uploaded media file, not both.")
     else:
         st.session_state.pipeline_done = False
         st.session_state.result = None
@@ -383,7 +389,8 @@ if run_btn:
                 st.info("⚙️ Pipeline running — see sidebar for live status…")
 
             update_step("audio", "active")
-            chunks = process_input(source)
+            media_source = save_uploaded_media(uploaded_file) if uploaded_file is not None else source
+            chunks = process_input(media_source)
             update_step("audio", "done")
 
             update_step("transcript", "active")
