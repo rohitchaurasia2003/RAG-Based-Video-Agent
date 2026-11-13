@@ -44,7 +44,7 @@ Install the Python dependencies:
 
 ```bash
 python -m pip install --upgrade pip
-python -m pip install -r Requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 Create a `.env` file in the project root and add your own credentials:
